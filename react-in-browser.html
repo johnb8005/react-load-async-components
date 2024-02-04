@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Render Async React Component with JSX</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <!-- font awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <script>
+      // Simulate fetching the JSX component code as a string from an API
+      const fetchedComponentCode = `
+      const DismissibleAlert = () => {
+  const [isVisible, setIsVisible] = React.useState<boolean>(true);
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
+      <div className="flex justify-between">
+        <div className="flex">
+          <div className="py-1"><i className="fa fa-exclamation-triangle"/></div>
+          <div className="ml-3">
+            <p className="font-bold">Warning</p>
+            <p>Something not ideal might be happening.</p>
+          </div>
+        </div>
+        <div>
+          <button onClick={() => setIsVisible(false)} className="text-yellow-700">
+            <span className="fa fa-times"/>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const desc:string = "Here is some additional information you might find useful.";
+
+            const MyComponent = () => {
+                
+
+               
+                    return <div className="p-4 m-5 border border-gray-200 rounded-lg shadow-lg bg-white">
+                      <h1 className="text-3xl font-bold text-gray-800 mb-3">Welcome!</h1>
+                      <DismissibleAlert/>
+                      <h2 className="text-xl text-red-500 font-semibold mb-2">This is an important alert</h2>
+                      <p className="text-gray-600 mb-4">{desc}</p>
+                      <div className="flex items-center">
+                        <i className="fa fa-user text-lg text-gray-700"/>&nbsp;
+                        <i className="fa fa-lock text-lg text-gray-700"/>
+                      </div>
+                    </div>;
+                
+            }
+            window.MyComponent = MyComponent; // Assign it to the global scope
+        `;
+
+      // Transpile the fetched JSX code to JavaScript using Babel
+      const transpiledCode = Babel.transform(fetchedComponentCode, {
+        presets: ["react", "typescript"],
+        filename: "component.tsx", // Add this line
+      }).code;
+
+      // Evaluate the transpiled code
+      eval(transpiledCode);
+
+      // Render the component
+      ReactDOM.render(
+        React.createElement(window.MyComponent),
+        document.getElementById("root")
+      );
+    </script>
+  </body>
+</html>
